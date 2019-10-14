@@ -26,10 +26,14 @@
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/">La Buchapp'</a>
+          <a class="navbar-brand" href="/">Buchettes Factory</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
-
+        	{% if user.is_authenticated %}
+        		<li><a href="{% url 'player_logout' %}">Logout</a></li>
+        	{% else %}
+        		<li><a href="{% url 'player_login' %}">Login</a></li>
+        	{% endif %}
         </ul>
       </div>
     </nav>

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'buchettes_app',
 ]
 
 MIDDLEWARE = [
@@ -103,7 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr'
 
 TIME_ZONE = 'UTC'
 
@@ -123,3 +124,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
         os.path.join(BASE_DIR,"static")
     ]
+
+# Adresse de renvoi après une authentifaction d'un utilisateur
+LOGIN_REDIRECT_URL= "player_home"
+# Adresse de renvoi après un logout
+LOGOUT_REDIRECT_URL= "Home"
+# Adresse de l'interface de login
+LOGIN_URL="player_login"
