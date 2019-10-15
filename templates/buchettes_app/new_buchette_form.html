@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Yes ! Une nouvelle buchette !
+{% endblock %}
+
+{% block content %}
+	<form method="post" action="{% url 'new_buchette' %}">
+        {{ form | crispy }}
+        {% csrf_token %}
+        <p></p>
+        <button type="submit">Envoi de la buchette</button>
+	</form>
+{% endblock %}

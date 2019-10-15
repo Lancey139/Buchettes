@@ -1,14 +1,55 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
 Welcome
 {% endblock %}
 
 {% block content %}
-	<div class="jumbotron">
-		<div class="container">
-			<h1>Buchettes</h1>
-			<p>Bienvenue {{ user.username }} !</p>
+	<h2 class="text-primary">
+		Bienvenue à la bonne buchette {% if user.is_authenticated %} {{ user.username }} {% endif %} !
+	</h2>
+
+	<div class="row">
+			<h3>Tableau des buchettes</h3>
+
+			{% if dico_user_buchettes %}
+					<table class="table table-bodered tictactoe-table">
+					{% for user, list_buchette in dico_user_buchettes.items %}
+						<tr height="50">
+							<td class="tictactoe-cell">
+								{{ user }}
+						    </td>
+							<td class="tictactoe-cell">
+								{% for buchette in list_buchette %}
+									{% if buchette.status_buchette == 'A' %}
+										<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
+											width="50" height="50">
+									{% elif buchette.status_buchette == 'D' %}
+										<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
+											width="50" height="50" style="opacity:0.3">
+									{% endif %}
+								{% endfor %}
+						    </td>
+						</tr>
+					{% endfor %}
+					</table>
+			{% endif %}
+	</div>
+
+	{% if user.is_authenticated %}
+	<div class="row">
+		<div class="col-md-6">
+			<p>
+				<a class="btn btn-primary"
+					href="{% url 'new_buchette' %}"> Mettre une buchette !</a>
+				{% if is_comite_buchette == True %}
+				<a class="btn btn-primary"
+					href="{% url 'new_buchette' %}"> Valider une buchette </a>
+				{% endif %}
+			</p>
 		</div>
 	</div>
-{% endblock %}	
+	{% endif %}
+
+{% endblock %}
