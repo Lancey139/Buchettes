@@ -24,10 +24,12 @@ Welcome
 								{% for buchette in list_buchette %}
 									{% if buchette.status_buchette == 'A' %}
 										<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
-											width="50" height="50">
+											width="50" height="50"
+								            title="{{ buchette.date_buchette }} {{ buchette.message_buchette }}">
 									{% elif buchette.status_buchette == 'D' %}
 										<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
-											width="50" height="50" style="opacity:0.3">
+											width="50" height="50" style="opacity:0.3"
+											title="{{ buchette.date_buchette }} {{ buchette.message_buchette }}">
 									{% endif %}
 								{% endfor %}
 						    </td>
@@ -43,13 +45,44 @@ Welcome
 			<p>
 				<a class="btn btn-primary"
 					href="{% url 'new_buchette' %}"> Mettre une buchette !</a>
-				{% if is_comite_buchette == True %}
-				<a class="btn btn-primary"
-					href="{% url 'new_buchette' %}"> Valider une buchette </a>
-				{% endif %}
 			</p>
 		</div>
 	</div>
+	{% if is_comite_buchette == True %}
+		<div class="row">
+			<h3>Buchettes à valider par le comité</h3>
+
+			{% if list_buchette_a_valider %}
+				<table class="table table-bodered tictactoe-table">
+					<tr>
+						<td class="tictactoe-cell">Victime </td>
+						<td class="tictactoe-cell">Message associé </td>
+						<td class="tictactoe-cell"> Date buchette </td>
+						<td class="tictactoe-cell"></td>
+						<td class="tictactoe-cell"></td>
+					</tr>
+					{% for buchette in list_buchette_a_valider %}
+					<tr>
+						<td class="tictactoe-cell"> {{ buchette.victime }} </td>
+						<td class="tictactoe-cell"> {{ buchette.message_buchette }} </td>
+						<td class="tictactoe-cell"> {{ buchette.date_buchette }} </td>
+						<td><a class="btn btn-primary"
+							   href="{% url 'accept_buchette' id=buchette.id %}"
+							   > Valider </a> </td>
+						<td><a class="btn btn-primary"
+							   href="{% url 'deny_buchette' id=buchette.id %}"
+						        > Refuser </a> </td>
+					</tr>
+					{% endfor %}
+					</table>
+				</div>
+			{% else %}
+				<p>Il n'ya a pas de buchettes en attente de validation.</p>
+			{% endif %}
+
+		</div>
+	{% endif %}
+
 	{% endif %}
 
 {% endblock %}
