@@ -30,6 +30,10 @@ Welcome
 										<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
 											width="50" height="50" style="opacity:0.3"
 											title="{{ buchette.date_buchette }} {{ buchette.message_buchette }}">
+									{% elif buchette.status_buchette == 'P' %}
+										<img src="{% static "img/croissant.jpg" %}" alt="Ma buchette"
+											width="50" height="50"
+											title="Buchette payées en attente de 2 validations par les utilisateurs">
 									{% endif %}
 								{% endfor %}
 						    </td>
@@ -40,48 +44,56 @@ Welcome
 	</div>
 
 	{% if user.is_authenticated %}
-	<div class="row">
-		<div class="col-md-6">
-			<p>
-				<a class="btn btn-primary"
-					href="{% url 'new_buchette' %}"> Mettre une buchette !</a>
-			</p>
-		</div>
-	</div>
-	{% if is_comite_buchette == True %}
 		<div class="row">
-			<h3>Buchettes à valider par le comité</h3>
-
-			{% if list_buchette_a_valider %}
-				<table class="table table-bodered tictactoe-table">
-					<tr>
-						<td class="tictactoe-cell">Victime </td>
-						<td class="tictactoe-cell">Message associé </td>
-						<td class="tictactoe-cell"> Date buchette </td>
-						<td class="tictactoe-cell"></td>
-						<td class="tictactoe-cell"></td>
-					</tr>
-					{% for buchette in list_buchette_a_valider %}
-					<tr>
-						<td class="tictactoe-cell"> {{ buchette.victime }} </td>
-						<td class="tictactoe-cell"> {{ buchette.message_buchette }} </td>
-						<td class="tictactoe-cell"> {{ buchette.date_buchette }} </td>
-						<td><a class="btn btn-primary"
-							   href="{% url 'accept_buchette' id=buchette.id %}"
-							   > Valider </a> </td>
-						<td><a class="btn btn-primary"
-							   href="{% url 'deny_buchette' id=buchette.id %}"
-						        > Refuser </a> </td>
-					</tr>
-					{% endfor %}
-					</table>
-				</div>
-			{% else %}
-				<p>Il n'ya a pas de buchettes en attente de validation.</p>
-			{% endif %}
-
+			<div class="col-md-6">
+				<p>
+					<a class="btn btn-primary"
+						href="{% url 'new_buchette' %}"> Mettre une buchette !</a>
+				</p>
+			</div>
+			<div class="col-md-6">
+				<p>
+					<a class="btn btn-primary"
+						href="{% url 'buchette_payees' %}"
+					   {% if nombre_buchette_utilisateur_courant < 3 %} disabled="disabled" {% endif %}
+						> J'ai payé mes buchettes</a>
+				</p>
+			</div>
 		</div>
-	{% endif %}
+		{% if is_comite_buchette == True %}
+			<div class="row">
+				<h3>Buchettes à valider par le comité</h3>
+
+				{% if list_buchette_a_valider %}
+					<table class="table table-bodered tictactoe-table">
+						<tr>
+							<td class="tictactoe-cell">Victime </td>
+							<td class="tictactoe-cell">Message associé </td>
+							<td class="tictactoe-cell"> Date buchette </td>
+							<td class="tictactoe-cell"></td>
+							<td class="tictactoe-cell"></td>
+						</tr>
+						{% for buchette in list_buchette_a_valider %}
+						<tr>
+							<td class="tictactoe-cell"> {{ buchette.victime }} </td>
+							<td class="tictactoe-cell"> {{ buchette.message_buchette }} </td>
+							<td class="tictactoe-cell"> {{ buchette.date_buchette }} </td>
+							<td><a class="btn btn-primary"
+								   href="{% url 'accept_buchette' id=buchette.id %}"
+								   > Valider </a> </td>
+							<td><a class="btn btn-primary"
+								   href="{% url 'deny_buchette' id=buchette.id %}"
+									> Refuser </a> </td>
+						</tr>
+						{% endfor %}
+						</table>
+					</div>
+				{% else %}
+					<p>Il n'ya a pas de buchettes en attente de validation.</p>
+				{% endif %}
+
+			</div>
+		{% endif %}
 
 	{% endif %}
 

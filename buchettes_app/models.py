@@ -5,15 +5,22 @@ from django.contrib.auth.models import User
 BUCHETTE_STATUS_CHOICES = [
     ('D', 'Demande de Buchette en cours'),
     ('A', 'Buchette acceptée par le comité'),
+    ('P', 'Buchette payée en attente de validation'),
+    ('V', 'Paiement de la buchette validée par 1 utilisateur'),
     ('S', 'Buchette soldée'),
     ('R', 'Buchette refusée par le comité'),
     ]
 
 class BuchetteQuerySet(models.QuerySet):
     def buchettes_for_user(self, user):
-        # Méthode en charge de renvoyer un qury set contenant toutes les games
+        # Méthode en charge de renvoyer un query set contenant toutes les games
         # d'un utilisateur
         return self.filter(victime=user)
+
+    def buchette_a_payer_for_user(self, user):
+        # Méthode en charge de renvoyer un query set contenant toutes les games
+        # d'un utilisateur
+        return self.filter(victime=user, status_buchette='A')
 
     def buchettes_a_valider(self):
         return self.filter(status_buchette='D')
