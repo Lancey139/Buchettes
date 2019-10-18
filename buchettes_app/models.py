@@ -25,6 +25,18 @@ class BuchetteQuerySet(models.QuerySet):
     def buchettes_a_valider(self):
         return self.filter(status_buchette='D')
 
+    def buchette_payees_a_confirmer_exclude_user(self, user):
+        l_buchette_payee = self.filter(
+            Q(status_buchette='P') | Q(status_buchette='V')
+            )
+        return l_buchette_payee.exclude(victime=user)
+
+    def buchette_payees_a_confirmer_for_user(self, user):
+        l_buchette_payee = self.filter(
+            Q(status_buchette='P') | Q(status_buchette='V')
+            )
+        return l_buchette_payee.filter(victime=user)
+
 
 class Buchette(models.Model):
     victime = models.ForeignKey(User, related_name="victime_buchette", on_delete=models.CASCADE)

@@ -11,39 +11,46 @@ Welcome
 	</h2>
 
 	<div class="row">
-			<h3>Tableau des buchettes</h3>
+		<p style="margin-top:50px"></p>
+		<h3>Tableau des buchettes</h3>
+		<p style="margin-top:30px"></p>
 
-			{% if dico_user_buchettes %}
-					<table class="table table-bodered tictactoe-table">
-					{% for user, list_buchette in dico_user_buchettes.items %}
-						<tr height="50">
-							<td class="tictactoe-cell">
-								{{ user }}
-						    </td>
-							<td class="tictactoe-cell">
-								{% for buchette in list_buchette %}
-									{% if buchette.status_buchette == 'A' %}
-										<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
-											width="50" height="50"
-								            title="{{ buchette.date_buchette }} {{ buchette.message_buchette }}">
-									{% elif buchette.status_buchette == 'D' %}
-										<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
-											width="50" height="50" style="opacity:0.3"
-											title="{{ buchette.date_buchette }} {{ buchette.message_buchette }}">
-									{% elif buchette.status_buchette == 'P' %}
-										<img src="{% static "img/croissant.jpg" %}" alt="Ma buchette"
-											width="50" height="50"
-											title="Buchette payées en attente de 2 validations par les utilisateurs">
-									{% endif %}
-								{% endfor %}
-						    </td>
-						</tr>
-					{% endfor %}
-					</table>
-			{% endif %}
+		{% if dico_user_buchettes %}
+				<table class="table table-bodered tictactoe-table">
+				{% for user, list_buchette in dico_user_buchettes.items %}
+					<tr height="50">
+						<td class="tictactoe-cell">
+							{{ user }}
+						</td>
+						<td class="tictactoe-cell">
+							{% for buchette in list_buchette %}
+								{% if buchette.status_buchette == 'A' %}
+									<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
+										width="50" height="50"
+										title="{{ buchette.date_buchette }} {{ buchette.message_buchette }}">
+								{% elif buchette.status_buchette == 'D' %}
+									<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
+										width="50" height="50" style="opacity:0.3"
+										title="{{ buchette.date_buchette }} {{ buchette.message_buchette }}">
+								{% elif buchette.status_buchette == 'P' %}
+									<img src="{% static "img/croissant.jpg" %}" alt="Ma buchette"
+										width="50" height="50"
+										title="Buchette payées en attente de 2 validations par les utilisateurs">
+								{% elif buchette.status_buchette == 'V' %}
+									<img src="{% static "img/pain_choco.jpg" %}" alt="Ma buchette"
+										width="50" height="50"
+										title="Buchette payées en attente de 1 validation par les utilisateurs">
+								{% endif %}
+							{% endfor %}
+						</td>
+					</tr>
+				{% endfor %}
+				</table>
+		{% endif %}
 	</div>
 
 	{% if user.is_authenticated %}
+		<p style="margin-top:30px"></p>
 		<div class="row">
 			<div class="col-md-6">
 				<p>
@@ -60,6 +67,36 @@ Welcome
 				</p>
 			</div>
 		</div>
+		{% if dico_user_buchettes_payees_a_confirmer.items %}
+
+			<p style="margin-top:50px"></p>
+			<h3>Buchettes payées à confirmer ! </h3>
+			<p style="margin-top:30px"></p>
+			<table class="table table-bodered tictactoe-table">
+
+			{% for l_user, list_buchette in dico_user_buchettes_payees_a_confirmer.items %}
+					<tr>
+						<td class="tictactoe-cell">
+							<p> {{ l_user }} prétend avoir payé {{ list_buchette.count }} buchettes </p>
+						</td>
+						<td class="tictactoe-cell">
+							<p>
+								<a class="btn btn-primary"
+									href="{% url 'confirmation_buchette_soldees' user_id=l_user.id %}"
+								   > Je confirme, on s'est régalé !</a>
+							</p>
+						</td>
+						<td class="tictactoe-cell">
+							<p>
+								<a class="btn btn-primary"
+									href="{% url 'new_buchette' %}"> C'est faux ! </a>
+							</p>
+						</td>
+					</tr>
+			{% endfor %}
+			</table>
+		{% endif %}
+
 		{% if is_comite_buchette == True %}
 			<div class="row">
 				<h3>Buchettes à valider par le comité</h3>
