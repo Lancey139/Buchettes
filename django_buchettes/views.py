@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 Fonction de la page d'acceuil
 """

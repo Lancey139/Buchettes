@@ -1,3 +1,4 @@
+# coding: utf-8
 from django.conf.urls import url
 from .views import home, new_buchette, accept_buchette, deny_buchette, singup_view, buchette_payees, \
     confirmation_buchette_soldees, buchette_non_payee
