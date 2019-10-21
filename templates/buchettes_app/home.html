@@ -89,7 +89,8 @@ Welcome
 						<td class="tictactoe-cell">
 							<p>
 								<a class="btn btn-primary"
-									href="{% url 'new_buchette' %}"> C'est faux ! </a>
+									href="{% url 'buchette_non_payee' user_id=l_user.id %}">
+									C'est faux ! </a>
 							</p>
 						</td>
 					</tr>

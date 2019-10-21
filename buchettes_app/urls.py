@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from .views import home, new_buchette, accept_buchette, deny_buchette, singup_view, buchette_payees, \
-    confirmation_buchette_soldees
+    confirmation_buchette_soldees, buchette_non_payee
 from django.contrib.auth.views import LoginView, LogoutView
 
 
@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'deny_buchette/(?P<id>\d+)/$', deny_buchette, name="deny_buchette"),
     url(r'confirmation_buchette_soldees/(?P<user_id>\d+)/$', confirmation_buchette_soldees,
         name="confirmation_buchette_soldees"),
+    url(r'buchette_non_payee/(?P<user_id>\d+)/$', buchette_non_payee,
+        name="buchette_non_payee"),
     url(r'signup$', singup_view, name='player_signup')
     ]
 

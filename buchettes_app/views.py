@@ -187,6 +187,31 @@ def confirmation_buchette_soldees(request, user_id):
     else:
         return HttpResponse("Impossible de confirmer vos propres buchettes !", status=401)
 
+@login_required
+def buchette_non_payee(request, user_id):
+    # On verifie que le user en train de confirmer n'est pas celui qui a payé ses buchettes
+    if request.user.id != user_id:
+        # On identifie les buchettes concernees par le paiement grace au user id
+        # On commence par retrouver notre user
+        l_user_concerne = get_object_or_404(User, pk=user_id)
+        # On établit ensuite la liste des buchettes a confirmer pour ce user
+        l_buchette_a_confirmer = Buchette.objects.buchette_payees_a_confirmer_for_user(l_user_concerne)
+        print(l_buchette_a_confirmer.count())
+        # On vient confirmer les 3 ou - buchettes les plus anciennes
+        # On trouve les 3 buchettes les plus anciennes dans la liste
+        l_buchette_sorted = l_buchette_a_confirmer.order_by('date_buchette')
+        # On détermine le nombre à confirmer (3 ou moins)
+        l_nombre_a_confirmer = 3 if l_buchette_sorted.count() >= 3 else l_buchette_sorted.count()
+        # On prend les 3 premières buchettes qui sont les plus anciennes et on change leur status
+        for i in range(l_nombre_a_confirmer):
+            # On repasse le status des 3 buchettes a non payées
+            list(l_buchette_sorted)[i].status_buchette = 'A'
+            l_buchette_sorted[i].save()
+        # Redirige ensuite vers le home
+        return redirect("player_home")
+    else:
+        return HttpResponse("Impossible de confirmer vos propres buchettes !", status=401)
+
 
 def singup_view(request):
     """
