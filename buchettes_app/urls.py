@@ -3,6 +3,7 @@ from django.conf.urls import url
 from .views import home, new_buchette, accept_buchette, deny_buchette, singup_view, buchette_payees, \
     confirmation_buchette_soldees, buchette_non_payee
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 
 urlpatterns = [
@@ -20,4 +21,6 @@ urlpatterns = [
         name="buchette_non_payee"),
     url(r'signup$', singup_view, name='player_signup')
     ]
+
+urlpatterns += staticfiles_urlpatterns()
 

@@ -26,7 +26,8 @@ SECRET_KEY = '2b_6hq)-^b5&@uhv#2qeg(3w+jpj(m=_g4&&0$t#^e^3!3&-17'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost"]
+
 
 
 # Application definition
@@ -119,7 +120,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, "static_deploy")
 STATIC_URL = '/static/'
 
 # Django cherchera ses fichiers statics dans ce dossier.

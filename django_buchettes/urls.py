@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import welcome
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('buchettes_app/', include('buchettes_app.urls')),
     path('', welcome, name="Home")
 ]
+
+urlpatterns += staticfiles_urlpatterns()
