@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-Welcome
+La Buch'App
 {% endblock %}
 
 {% block content %}
@@ -15,15 +15,15 @@ Welcome
 		<h3>Tableau des buchettes</h3>
 		<p style="margin-top:30px"></p>
 
-		{% if dico_user_buchettes %}
+		{% if list_user_tries %}
 				<table class="table table-bodered tictactoe-table">
-				{% for user, list_buchette in dico_user_buchettes.items %}
+				{% for user in list_user_tries %}
 					<tr height="50">
 						<td class="tictactoe-cell">
 							{{ user }}
 						</td>
 						<td class="tictactoe-cell">
-							{% for buchette in list_buchette %}
+							{% for buchette in dictionnaire_user_buchette|get_item:user %}
 								{% if buchette.status_buchette == 'A' %}
 									<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
 										width="50" height="50"

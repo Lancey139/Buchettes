@@ -23,9 +23,20 @@ def home(request):
     # les buchettes payées a confirmées de l'utilisateur.
     # Les buchettes payées à confirmer de l'utilisateru courant sont exclues
     l_dict_user_buchette_payee_confirmation = {}
+    # Contient les utilisateur triés dans l'ordre de nombre de buchettes
+    l_list_user_tries = []
 
+    # Dicotionnaire temporaire contenant les buchettes a payer pour les users
+    l_dict_user_a_payer = {}
     for l_user in User.objects.all():
         l_dictionnaire_user_buchette[l_user] = Buchette.objects.buchettes_for_user(l_user)
+        l_dict_user_a_payer[l_user] = Buchette.objects.buchette_a_payer_for_user(l_user)
+    # Afin d'afficher les utlisaterus par nombres de buchettes décroissants,
+    # On créé une liste contenant les user triés dans l'ordre
+    # En effet, les dictionnaires ne conserve pas l'ordre
+    for l_user_sort in sorted(l_dict_user_a_payer,
+                         key=lambda l_user_sort: l_dict_user_a_payer[l_user_sort].count(), reverse=True):
+        l_list_user_tries.append(l_user_sort)
 
     # Code activé que si l'utilisateur est identifié
     if request.user.is_authenticated:
@@ -51,7 +62,8 @@ def home(request):
 
     return render(request, 'buchettes_app/home.html',
                   {
-                      'dico_user_buchettes': l_dictionnaire_user_buchette,
+                      'list_user_tries': l_list_user_tries,
+                      'dictionnaire_user_buchette': l_dictionnaire_user_buchette,
                       'is_comite_buchette': l_comite_user,
                       'list_buchette_a_valider': l_liste_buchette_a_valider,
                       'nombre_buchette_utilisateur_courant' : l_buchette_current_user,
