@@ -37,13 +37,9 @@ La Buch'App
 										width="50" height="50" style="opacity:0.3"
 										title="{{ buchette.date_buchette }} {{ buchette.message_buchette }} ">
 								{% elif buchette.status_buchette == 'P' %}
-									<img src="{% static "img/croissant.jpg" %}" alt="Ma buchette"
-										width="50" height="50"
-										title="Buchette payées en attente de 2 validations par les utilisateurs">
-								{% elif buchette.status_buchette == 'V' %}
 									<img src="{% static "img/pain_choco.jpg" %}" alt="Ma buchette"
 										width="50" height="50"
-										title="Buchette payées en attente de 1 validation par les utilisateurs">
+										title="Buchette payées en attente d'une validation par un utilisateur">
 								{% endif %}
 							{% endfor %}
 						</td>
@@ -87,7 +83,7 @@ La Buch'App
 							<p>
 								<a class="btn btn-primary"
 									href="{% url 'confirmation_buchette_soldees' user_id=l_user.id %}"
-								   > Je confirme, on s'est régalé !</a>
+								   > Je confirme, on s'est régaléS !</a>
 							</p>
 						</td>
 						<td class="tictactoe-cell">

@@ -10,7 +10,6 @@ BUCHETTE_STATUS_CHOICES = [
     ('E', 'L\'accusé a écrit sa défence'),
     ('A', 'Buchette acceptée par le comité'),
     ('P', 'Buchette payée en attente de validation'),
-    ('V', 'Paiement de la buchette validée par 1 utilisateur'),
     ('S', 'Buchette soldée'),
     ('R', 'Buchette refusée par le comité'),
     ]

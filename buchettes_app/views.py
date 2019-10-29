@@ -196,8 +196,6 @@ def confirmation_buchette_soldees(request, user_id):
             # Si le status était P on passe à V car 1a valisation a été faite
             # Si c'était V on passe à S
             if list(l_buchette_sorted)[i].status_buchette == 'P':
-                list(l_buchette_sorted)[i].status_buchette = 'V'
-            elif list(l_buchette_sorted)[i].status_buchette == 'V':
                 list(l_buchette_sorted)[i].status_buchette = 'S'
             l_buchette_sorted[i].save()
         # Redirige ensuite vers le home
