@@ -25,8 +25,7 @@ La Buch'App
 						<td class="tictactoe-cell">
 							{% if dictionnaire_user_buchette_A|get_item_count:user > 3 %}
 								<img src="{% static "img/bourse_po.jpg" %}" alt="Ma bourse"
-										width="50" height="50"
-										title="{{ buchette.date_buchette }} {{ buchette.message_buchette }} ">
+										width="50" height="50" >
 							{% endif %}
 						</td>
 						<td class="tictactoe-cell">
