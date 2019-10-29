@@ -27,11 +27,15 @@ La Buch'App
 								{% if buchette.status_buchette == 'A' %}
 									<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
 										width="50" height="50"
-										title="{{ buchette.date_buchette }} {{ buchette.message_buchette }}">
-								{% elif buchette.status_buchette == 'D' %}
+										title="{{ buchette.date_buchette }} {{ buchette.message_buchette }} ">
+								{% elif buchette.status_buchette == 'D'%}
+									<img src="{% static "img/bouclier.jpg" %}" alt="Ma buchette"
+										width="50" height="50"
+										title="{{ buchette.date_buchette }} Buchette à défendre : {{ buchette.message_buchette }} ">
+								{% elif buchette.status_buchette == 'E'%}
 									<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
 										width="50" height="50" style="opacity:0.3"
-										title="{{ buchette.date_buchette }} {{ buchette.message_buchette }}">
+										title="{{ buchette.date_buchette }} {{ buchette.message_buchette }} ">
 								{% elif buchette.status_buchette == 'P' %}
 									<img src="{% static "img/croissant.jpg" %}" alt="Ma buchette"
 										width="50" height="50"
@@ -98,6 +102,55 @@ La Buch'App
 			</table>
 		{% endif %}
 
+		{% if liste_user_a_defendre %}
+
+			<p style="margin-top:50px"></p>
+			<h3> Buchettes à defendre ! </h3>
+			<p style="margin-top:30px"></p>
+			<table class="table table-bodered tictactoe-table">
+				<tr>
+					<td class="tictactoe-cell">Date Buchette </td>
+					<td class="tictactoe-cell">Message associé </td>
+					<td class="tictactoe-cell"> Temps restant </td>
+					<td class="tictactoe-cell">  </td>
+					<td class="tictactoe-cell">  </td>
+					<td class="tictactoe-cell"></td>
+					<td class="tictactoe-cell"></td>
+				</tr>
+			{% for l_buchette in liste_user_a_defendre %}
+					<tr>
+						<td class="tictactoe-cell">
+							<p> {{ l_buchette.date_buchette }} </p>
+						</td>
+						<td class="tictactoe-cell">
+							<p>
+								<p> {{ l_buchette.message_buchette }} </p>
+							</p>
+						</td>
+						<td class="tictactoe-cell">
+							<p>
+								<p> {{ l_buchette.temps_restant }} </p>
+							</p>
+						</td>
+						<td class="tictactoe-cell">
+							<p>
+								<a class="btn btn-primary"
+									href="{% url 'defence' id=l_buchette.id %}">
+									Je me défends </a>
+							</p>
+						</td>
+						<td class="tictactoe-cell">
+							<p>
+								<a class="btn btn-primary"
+									href="{% url 'indefendable' id=l_buchette.id %}">
+									Je suis indéfendable </a>
+							</p>
+						</td>
+					</tr>
+			{% endfor %}
+			</table>
+		{% endif %}
+
 		{% if is_comite_buchette == True %}
 			<div class="row">
 				<h3>Buchettes à valider par le comité</h3>
@@ -107,6 +160,7 @@ La Buch'App
 						<tr>
 							<td class="tictactoe-cell">Victime </td>
 							<td class="tictactoe-cell">Message associé </td>
+							<td class="tictactoe-cell">Message de la défense </td>
 							<td class="tictactoe-cell"> Date buchette </td>
 							<td class="tictactoe-cell"></td>
 							<td class="tictactoe-cell"></td>
@@ -115,6 +169,7 @@ La Buch'App
 						<tr>
 							<td class="tictactoe-cell"> {{ buchette.victime }} </td>
 							<td class="tictactoe-cell"> {{ buchette.message_buchette }} </td>
+							<td class="tictactoe-cell"> {{ buchette.message_defense }} </td>
 							<td class="tictactoe-cell"> {{ buchette.date_buchette }} </td>
 							<td><a class="btn btn-primary"
 								   href="{% url 'accept_buchette' id=buchette.id %}"

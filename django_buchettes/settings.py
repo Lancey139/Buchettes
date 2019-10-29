@@ -134,3 +134,7 @@ LOGIN_REDIRECT_URL= "player_home"
 LOGOUT_REDIRECT_URL= "Home"
 # Adresse de l'interface de login
 LOGIN_URL="player_login"
+
+# On utilise les times zones
+USE_TZ = True
+TIME_ZONE="Europe/Paris"

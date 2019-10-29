@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Tu es accusé de buchette, défends-toi !
+{% endblock %}
+
+{% block content %}
+	<form method="post" action="{% url 'defence' id=buchette_a_defendre.id %}">
+        {{ form | crispy }}
+        {% csrf_token %}
+        <p></p>
+        <button type="submit">Envoi de la défense</button>
+	</form>
+{% endblock %}

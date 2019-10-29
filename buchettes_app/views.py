@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Buchette
-from .forms import BuchetteForm, UserCreationFormEmail
+from .forms import BuchetteForm, UserCreationFormEmail, DefenceForm
 
 from django.urls.base import reverse_lazy
 from django.views.generic.edit import CreateView
@@ -25,8 +25,13 @@ def home(request):
     l_dict_user_buchette_payee_confirmation = {}
     # Contient les utilisateur triés dans l'ordre de nombre de buchettes
     l_list_user_tries = []
+    # Contient la liste des buchettes a defendre
+    l_liste_user_a_defendre = []
 
-    # Dicotionnaire temporaire contenant les buchettes a payer pour les users
+    # On verifie sur  l'ensemble des buchettes si certaines d'entre elles ne sont plus défendable (timeout)
+    Buchette.objects.update_buchette_temps_restant()
+
+    # Dictionnaire temporaire contenant les buchettes a payer pour les users
     l_dict_user_a_payer = {}
     for l_user in User.objects.all():
         l_dictionnaire_user_buchette[l_user] = Buchette.objects.buchettes_for_user(l_user)
@@ -42,6 +47,9 @@ def home(request):
     if request.user.is_authenticated:
         # On identifie le nombre de buchettes qu'a l'utilisateur courant
         l_buchette_current_user = Buchette.objects.buchette_a_payer_for_user(request.user).count()
+
+        # On identifie ici les buchettes pourlesquelles l'utilisateur counrant doit se défendre
+        l_liste_user_a_defendre = Buchette.objects.buchette_a_defendre_for_user(request.user)
 
         # On identifie ici les buchettes qui ont été payées et qui doivent être validées
         # On ne prend que les buchette p et v qui ne sont pas celles de l'utilisateur courant
@@ -68,6 +76,7 @@ def home(request):
                       'list_buchette_a_valider': l_liste_buchette_a_valider,
                       'nombre_buchette_utilisateur_courant' : l_buchette_current_user,
                       'dico_user_buchettes_payees_a_confirmer' : l_dict_user_buchette_payee_confirmation,
+                      'liste_user_a_defendre' : l_liste_user_a_defendre
                   })
 
 
@@ -104,13 +113,9 @@ def accept_buchette(request, id):
         buchette_a_valider = get_object_or_404(Buchette, pk=id)
 
         # On verifie que la bucette ne soit pas attribuée au membre en train de faire la vérification
-        if buchette_a_valider.victime == request.user:
-            l_message_erreur ='Impossible de valider sa propre buchette'
-            l_utilisateur_autorise = False
-        else:
-            l_utilisateur_autorise = True
-            buchette_a_valider.status_buchette = 'A'
-            buchette_a_valider.save()
+        l_utilisateur_autorise = True
+        buchette_a_valider.status_buchette = 'A'
+        buchette_a_valider.save()
     else:
         l_utilisateur_autorise = False
         l_message_erreur = 'Il faut être menmbre du comité pour valider une buchette'
@@ -241,3 +246,58 @@ def singup_view(request):
         l_form = UserCreationFormEmail()
 
     return render(request, "buchettes_app/signup_form.html", {'form': l_form})
+
+@login_required
+def defence(request, id):
+    # Méthode en charge d'e generer le form pour la défence d'une buchette.
+    buchette_a_defendre = get_object_or_404(Buchette, pk=id)
+
+    # On verifie que l'utilisateru courant est bien celui touché par la buchette
+    if buchette_a_defendre.victime != request.user:
+        return HttpResponse("Impossible de défendre les buchettes des autres !", status=401)
+    # On verifie que la buchette soit bien en état defence attendue
+    if buchette_a_defendre.status_buchette != 'D':
+        return HttpResponse("Cette buchette n'est plus défendable !", status=401)
+
+    if request.method == "POST":
+        #  On vérifie si la data est valide en lui donnant un model prérempli avec l'utilisa
+        # teur courant
+        form = DefenceForm(instance=buchette_a_defendre, data=request.POST)
+        # Cette méthode est tres importante et doit etre applée systématiquement
+        #  Si c'est valide on repart sur le home, sinon le form non validé est renvoyé
+        # a l'utilisateur
+        if form.is_valid():
+            #  On enregistre en data base
+            buchette_a_defendre.status_buchette = 'E'
+            form.save()
+            return redirect("player_home")
+    else:
+        # L'utilisateur demande un nouveau FORM vierge, on lui affiche
+        form = DefenceForm(instance=buchette_a_defendre)
+
+    return render(request, "buchettes_app/defence_form.html",
+                  {
+                      'form': form,
+                      'buchette_a_defendre' : buchette_a_defendre,
+                  })
+
+
+@login_required
+def indefendable(request, id):
+    # Méthode en charge de preremplir le champs défense
+    buchette_a_defendre = get_object_or_404(Buchette, pk=id)
+
+    #  On verifie que l'utilisateru courant est bien celui touché par la buchette
+    if buchette_a_defendre.victime != request.user:
+        return HttpResponse("Impossible de défendre les buchettes des autres !", status=401)
+    #  On verifie que la buchette soit bien en état defence attendue
+    if buchette_a_defendre.status_buchette != 'D':
+        return HttpResponse("Cette buchette n'est plus défendable !", status=401)
+
+    buchette_a_defendre.message_defense = 'J\'accepte mon sort, je suis indéfendable !'
+    buchette_a_defendre.status_buchette = 'E'
+    buchette_a_defendre.save()
+
+    return redirect("player_home")
+
+
