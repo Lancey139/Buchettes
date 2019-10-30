@@ -20,7 +20,7 @@ La Buch'App
 				{% for user in list_user_tries %}
 					<tr height="50">
 						<td class="tictactoe-cell">
-							{{ user }}
+							<a href="{% url 'liste_buchettes' user_id=user.id%}"> {{ user }} </a>
 						</td>
 						<td class="tictactoe-cell">
 							{% if dictionnaire_user_buchette_A|get_item_count:user >= 3 %}

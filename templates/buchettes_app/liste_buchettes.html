@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+La Buch'App
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <h3>Liste des buchettes de l'utilisateur {{ user }} :</h3>
+
+        {% if liste_buchette %}
+            <table class="table table-bodered tictactoe-table">
+                <tr>
+                    <td class="tictactoe-cell"> Victime </td>
+                    <td class="tictactoe-cell"> Message associé </td>
+                    <td class="tictactoe-cell"> Message de la défense </td>
+                    <td class="tictactoe-cell"> Date buchette </td>
+                    <td class="tictactoe-cell"> Status de la buchette</td>
+                </tr>
+                {% for buchette in liste_buchette %}
+                <tr>
+                    <td class="tictactoe-cell"> {{ buchette.victime }} </td>
+                    <td class="tictactoe-cell"> {{ buchette.message_buchette }} </td>
+                    <td class="tictactoe-cell"> {{ buchette.message_defense }} </td>
+                    <td class="tictactoe-cell"> {{ buchette.date_buchette }} </td>
+                    <td class="tictactoe-cell">
+                        {% if buchette.status_buchette == 'A' %}
+                            <img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
+                                width="50" height="50"
+                                title="Buchette acceptée par le comité">
+                        {% elif buchette.status_buchette == 'D'%}
+                            <img src="{% static "img/bouclier.jpg" %}" alt="Ma buchette"
+                                width="50" height="50"
+                                title="Défense en cours !">
+                        {% elif buchette.status_buchette == 'E'%}
+                            <img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"
+                                width="50" height="50" style="opacity:0.3"
+                                title="En attente de validation par le comité">
+                        {% elif buchette.status_buchette == 'P' %}
+                            <img src="{% static "img/pain_choco.jpg" %}" alt="Ma buchette"
+                                width="50" height="50"
+                                title="Buchette payées en attente d'une validation par un utilisateur">
+                        {% elif buchette.status_buchette == 'S' %}
+                            <img src="{% static "img/bourse_po.jpg" %}" alt="Ma buchette"
+                                width="50" height="50"
+                                title="Buchette payées et validée">
+                        {% elif buchette.status_buchette == 'R' %}
+                            <img src="{% static "img/croix_rouge.jpg" %}" alt="Ma buchette"
+                                width="50" height="50"
+                                title="Refusée par le comité">
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </table>
+            </div>
+        {% else %}
+            <p>Il n'ya a pas de buchettes en attente de validation.</p>
+        {% endif %}
+
+
+{% endblock %}

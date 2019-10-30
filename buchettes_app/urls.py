@@ -1,7 +1,7 @@
 # coding: utf-8
 from django.conf.urls import url
 from .views import home, new_buchette, accept_buchette, deny_buchette, singup_view, buchette_payees, \
-    confirmation_buchette_soldees, buchette_non_payee, defence, indefendable
+    confirmation_buchette_soldees, buchette_non_payee, defence, indefendable, liste_buchettes
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
@@ -21,6 +21,7 @@ urlpatterns = [
         name="confirmation_buchette_soldees"),
     url(r'buchette_non_payee/(?P<user_id>\d+)/$', buchette_non_payee,
         name="buchette_non_payee"),
+    url(r'liste_buchettes/(?P<user_id>\d+)/$', liste_buchettes, name="liste_buchettes"),
     url(r'signup$', singup_view, name='player_signup')
     ]
 

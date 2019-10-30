@@ -318,3 +318,19 @@ def indefendable(request, id):
     return redirect("player_home")
 
 
+@login_required
+def liste_buchettes(request, user_id):
+    # On commence par retrouver notre user
+    l_user_concerne = get_object_or_404(User, pk=user_id)
+    # Liste de toutes les buchettes classées de la puls récente à la plus vieille
+    l_liste_buchette = Buchette.objects.buchettes_for_user(l_user_concerne)
+    l_buchette_sorted = l_liste_buchette.order_by('date_buchette')
+    l_buchette_sorted = l_buchette_sorted.reverse()
+    return render(request, "buchettes_app/liste_buchettes.html",
+                  {
+                      'user': l_user_concerne,
+                      'liste_buchette': l_buchette_sorted,
+                  })
+
+
+
