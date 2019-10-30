@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Buchette
 from .forms import BuchetteForm, UserCreationFormEmail, DefenceForm
+from django.core.mail import send_mail
+
 
 from django.urls.base import reverse_lazy
 from django.views.generic.edit import CreateView
@@ -96,10 +98,24 @@ def new_buchette(request):
         if form.is_valid():
             #  On enregistre en data base
             form.save()
+            # On informe l'utilisateur qu'il s'est pris une buchette et qu'il doit se défendre
+            l_string_email = "Bonjour "+l_buchette.victime.username+",\n\n"\
+                "J'ai le regret de vous annoncer que vous venez de vous prendre une buchette " +\
+                "pour le motif suivant : \n\n " + l_buchette.message_buchette + "\n\n" + \
+                "Vous avez 48h pour vous défendre, rendez vous sur http://slnxedfdipdeoutilpilotage01.marc.fr.ssg/"
+
+            send_mail(
+                '[ Buchette Factory ] Nouvelle Buchette',
+                l_string_email,
+                'IntegrationEdf@soprasteria.com',
+                [l_buchette.victime.email],
+                fail_silently=True,
+                )
             return redirect("player_home")
     else:
         # L'utilisateur demande un nouveau FORM vierge, on lui affiche
         form = BuchetteForm()
+
     return render(request, "buchettes_app/new_buchette_form.html", {'form': form})
 
 @login_required

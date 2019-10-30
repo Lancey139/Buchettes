@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'buchettes_app',
-    'crispy_forms'
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -138,3 +138,12 @@ LOGIN_URL="player_login"
 # On utilise les times zones
 USE_TZ = True
 TIME_ZONE="Europe/Paris"
+
+# Configuration des emails
+# Configuration deploiement : entrer le EMAIL_HOST et EMAIL_PORT ICI
+EMAIL_HOST = "host.exemple.com"
+EMAIL_PORT = 25
+# TODO : Chiffrer ce mot de passe
+EMAIL_HOST_USER = "user@exemple"
+EMAIL_HOST_PASSWORD = ""
+
