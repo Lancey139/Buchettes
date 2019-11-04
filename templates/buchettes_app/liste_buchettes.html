@@ -17,6 +17,7 @@ La Buch'App
                     <td class="tictactoe-cell"> Message associé </td>
                     <td class="tictactoe-cell"> Message de la défense </td>
                     <td class="tictactoe-cell"> Date buchette </td>
+                    <td class="tictactoe-cell"> Membre du comité ayant validé </td>
                     <td class="tictactoe-cell"> Status de la buchette</td>
                 </tr>
                 {% for buchette in liste_buchette %}
@@ -25,6 +26,7 @@ La Buch'App
                     <td class="tictactoe-cell"> {{ buchette.message_buchette }} </td>
                     <td class="tictactoe-cell"> {{ buchette.message_defense }} </td>
                     <td class="tictactoe-cell"> {{ buchette.date_buchette }} </td>
+                    <td class="tictactoe-cell"> {{ buchette.nom_membre_comite }} </td>
                     <td class="tictactoe-cell">
                         {% if buchette.status_buchette == 'A' %}
                             <img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"

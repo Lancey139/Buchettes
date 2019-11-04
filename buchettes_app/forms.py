@@ -9,13 +9,13 @@ from .models import Buchette
 class BuchetteForm(ModelForm):
     class Meta:
         model = Buchette
-        exclude = ('date_buchette', 'status_buchette', 'message_defense', 'temps_restant')
+        exclude = ('date_buchette', 'status_buchette', 'message_defense', 'temps_restant', 'nom_membre_comite')
 
 
 class DefenceForm(ModelForm):
     class Meta:
         model = Buchette
-        exclude = ('date_buchette', 'status_buchette', 'victime', 'temps_restant')
+        exclude = ('date_buchette', 'status_buchette', 'victime', 'temps_restant', 'nom_membre_comite')
         widgets = {
             'message_buchette': Textarea(attrs={'readonly': True}),
         }

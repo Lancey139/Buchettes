@@ -143,9 +143,9 @@ def accept_buchette(request, id):
         # Méthode en charge d'accepter une buchette.
         buchette_a_valider = get_object_or_404(Buchette, pk=id)
 
-        # On verifie que la bucette ne soit pas attribuée au membre en train de faire la vérification
         l_utilisateur_autorise = True
         buchette_a_valider.status_buchette = 'A'
+        buchette_a_valider.nom_membre_comite = request.user.username
         buchette_a_valider.save()
     else:
         l_utilisateur_autorise = False

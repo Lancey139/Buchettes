@@ -79,6 +79,8 @@ class Buchette(models.Model):
 
     temps_restant = models.DurationField(default=dt.timedelta(seconds=57))
 
+    nom_membre_comite = models.TextField(default="")
+
     # On déclare le manager associé
     objects = BuchetteQuerySet.as_manager()
 
