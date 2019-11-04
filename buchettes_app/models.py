@@ -45,6 +45,10 @@ class BuchetteQuerySet(models.QuerySet):
             )
         return l_buchette_payee.filter(victime=user)
 
+    def buchette_totale_sans_R_for_user(self, user):
+        l_buchette_totale = self.filter(victime=user)
+        return l_buchette_totale.exclude(status_buchette='R')
+
     def update_buchette_temps_restant(self):
         # Méthode en charge de parcourir toutes les buchettes pour mettre a jour le temps de défense restant
         l_list_buchette_a_update = self.filter(status_buchette='D')

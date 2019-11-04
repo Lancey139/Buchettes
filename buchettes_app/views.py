@@ -32,14 +32,20 @@ def home(request):
     l_list_user_tries = []
     # Contient la liste des buchettes a defendre
     l_liste_user_a_defendre = []
+    # Contient un dico dont la clé est les users et la valeur la medaille du plus de buchette
+    l_dictionnaire_user_buchette_sans_R = {}
+    l_dico_user_medaille = {}
 
     # On verifie sur  l'ensemble des buchettes si certaines d'entre elles ne sont plus défendable (timeout)
     Buchette.objects.update_buchette_temps_restant()
 
     # Dictionnaire temporaire contenant les buchettes a payer pour les users
+
+
     for l_user in User.objects.all():
         l_dictionnaire_user_buchette[l_user] = Buchette.objects.buchettes_for_user(l_user)
         l_dictionnaire_user_buchette_A[l_user] = Buchette.objects.buchette_a_payer_for_user(l_user)
+        l_dictionnaire_user_buchette_sans_R[l_user] = Buchette.objects.buchette_totale_sans_R_for_user(l_user)
     # Afin d'afficher les utlisaterus par nombres de buchettes décroissants,
     # On créé une liste contenant les user triés dans l'ordre
     # En effet, les dictionnaires ne conserve pas l'ordre
@@ -47,6 +53,11 @@ def home(request):
                          key=lambda l_user_sort: l_dictionnaire_user_buchette_A[l_user_sort].count(), reverse=True):
         l_list_user_tries.append(l_user_sort)
 
+    # Attribution des medailles aux 3 champions
+    for i, l_user_sort in enumerate(sorted(l_dictionnaire_user_buchette_sans_R,
+                         key=lambda l_user_sort: l_dictionnaire_user_buchette_sans_R[l_user_sort].count(),
+                         reverse=True)):
+        l_dico_user_medaille[l_user_sort] = i
     # Code activé que si l'utilisateur est identifié
     if request.user.is_authenticated:
         # On identifie le nombre de buchettes qu'a l'utilisateur courant
@@ -81,7 +92,8 @@ def home(request):
                       'list_buchette_a_valider': l_liste_buchette_a_valider,
                       'nombre_buchette_utilisateur_courant' : l_buchette_current_user,
                       'dico_user_buchettes_payees_a_confirmer' : l_dict_user_buchette_payee_confirmation,
-                      'liste_user_a_defendre' : l_liste_user_a_defendre
+                      'liste_user_a_defendre': l_liste_user_a_defendre,
+                      'dico_user_medaille': l_dico_user_medaille
                   })
 
 
