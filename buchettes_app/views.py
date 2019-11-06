@@ -5,11 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Buchette
 from .forms import BuchetteForm, UserCreationFormEmail, DefenceForm
+from .expressions import s_ListeExpressions
 from django.core.mail import send_mail
+import random
 
-
-from django.urls.base import reverse_lazy
-from django.views.generic.edit import CreateView
 
 
 def home(request):
@@ -35,6 +34,8 @@ def home(request):
     # Contient un dico dont la clé est les users et la valeur la medaille du plus de buchette
     l_dictionnaire_user_buchette_sans_R = {}
     l_dico_user_medaille = {}
+    # Contient une expression aléatoire
+    l_expression = ""
 
     # On verifie sur  l'ensemble des buchettes si certaines d'entre elles ne sont plus défendable (timeout)
     Buchette.objects.update_buchette_temps_restant()
@@ -58,6 +59,11 @@ def home(request):
                          key=lambda l_user_sort: l_dictionnaire_user_buchette_sans_R[l_user_sort].count(),
                          reverse=True)):
         l_dico_user_medaille[l_user_sort] = i
+
+    # Attibution de l'expression aléatoire
+    l_rand = random.randrange(0, len(s_ListeExpressions), 1)
+    l_expression = s_ListeExpressions[l_rand]
+
     # Code activé que si l'utilisateur est identifié
     if request.user.is_authenticated:
         # On identifie le nombre de buchettes qu'a l'utilisateur courant
@@ -93,7 +99,8 @@ def home(request):
                       'nombre_buchette_utilisateur_courant' : l_buchette_current_user,
                       'dico_user_buchettes_payees_a_confirmer' : l_dict_user_buchette_payee_confirmation,
                       'liste_user_a_defendre': l_liste_user_a_defendre,
-                      'dico_user_medaille': l_dico_user_medaille
+                      'dico_user_medaille': l_dico_user_medaille,
+                      'expression': l_expression
                   })
 
 
