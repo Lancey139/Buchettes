@@ -141,9 +141,9 @@ TIME_ZONE="Europe/Paris"
 
 # Configuration des emails
 # Configuration deploiement : entrer le EMAIL_HOST et EMAIL_PORT ICI
-EMAIL_HOST = "host.exemple.com"
-EMAIL_PORT = 25
-# TODO : Chiffrer ce mot de passe
-EMAIL_HOST_USER = "user@exemple"
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "exemple@gmail.com"
 EMAIL_HOST_PASSWORD = ""
 
