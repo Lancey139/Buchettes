@@ -58,7 +58,7 @@ def home(request):
     for i, l_user_sort in enumerate(sorted(l_dictionnaire_user_buchette_sans_R,
                          key=lambda l_user_sort: l_dictionnaire_user_buchette_sans_R[l_user_sort].count(),
                          reverse=True)):
-        if l_dictionnaire_user_buchette_sans_R[l_user_sort] != 0:
+        if l_dictionnaire_user_buchette_sans_R[l_user_sort].count() != 0:
             l_dico_user_medaille[l_user_sort] = i
         else:
             l_dico_user_medaille[l_user_sort] = 99
