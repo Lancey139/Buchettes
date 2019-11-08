@@ -19,33 +19,33 @@ La Buch'App
 				<table class="table table-bodered tictactoe-table">
 				{% for user in list_user_tries %}
 					<tr height="50">
-						<td class="tictactoe-cell">
+						<td class="username-cell">
 							{% if dico_user_medaille|get_item:user == 0 %}
 								<a href="{% url 'liste_buchettes' user_id=user.id%}"> {{ user }} </a>
 								<img src="{% static "img/medaille_or.jpg" %}" alt="Ma bourse"
 										width="17" height="25"
-										title="Utilisateur ayant le plus de buchettes en base de données">
+										title="Utilisateur ayant obtenu le plus de buchettes depuis le lancement de l'application">
 							{% elif dico_user_medaille|get_item:user == 1 %}
 								<a href="{% url 'liste_buchettes' user_id=user.id%}"> {{ user }} </a>
 								<img src="{% static "img/medaille_argent.jpg" %}" alt="Ma bourse"
 										width="17" height="25"
-										title="2 éme utilisateur ayant le plus de buchettes en base de données">
+										title="2éme utilisateur ayant obtenu le plus de buchettes depuis le lancement de l'application">
 							{% elif dico_user_medaille|get_item:user == 2 %}
 								<a href="{% url 'liste_buchettes' user_id=user.id%}"> {{ user }} </a>
 								<img src="{% static "img/medaille_bronze.jpg" %}" alt="Ma bourse"
 										width="17" height="25"
-										title="3 éme utilisateur ayant le plus de buchettes en base de données">
+										title="3éme utilisateur ayant obtenu le plus de buchettes depuis le lancement de l'application">
 							{% else %}
 								<a href="{% url 'liste_buchettes' user_id=user.id%}"> {{ user }} </a>
 							{% endif %}
 						</td>
-						<td class="tictactoe-cell">
+						<td class="bourse-cell">
 							{% if dictionnaire_user_buchette_A|get_item_count:user >= 3 %}
 								<img src="{% static "img/bourse_po.jpg" %}" alt="Ma bourse"
 										width="50" height="50" >
 							{% endif %}
 						</td>
-						<td class="tictactoe-cell">
+						<td class="buchette-cell">
 							{% for buchette in dictionnaire_user_buchette|get_item:user %}
 								{% if buchette.status_buchette == 'A' %}
 									<img src="{% static "img/buchette.jpg" %}" alt="Ma buchette"

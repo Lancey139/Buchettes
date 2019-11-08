@@ -70,12 +70,12 @@ class Buchette(models.Model):
 
     date_buchette = models.DateTimeField(auto_now_add=True)
 
-    message_buchette = models.TextField()
+    message_buchette = models.TextField(max_length=300)
 
     status_buchette = models.CharField(max_length=1, default='D',
                               choices=BUCHETTE_STATUS_CHOICES)
 
-    message_defense = models.TextField(default='')
+    message_defense = models.TextField(default='', max_length=300)
 
     temps_restant = models.DurationField(default=dt.timedelta(seconds=57))
 
