@@ -124,12 +124,12 @@ def new_buchette(request):
             l_string_email = "Bonjour "+l_buchette.victime.username+",\n\n"\
                 "J'ai le regret de vous annoncer que vous venez de vous prendre une buchette " +\
                 "pour le motif suivant : \n\n " + l_buchette.message_buchette + "\n\n" + \
-                "Vous avez 48h pour vous défendre, rendez vous sur http://slnxedfdipdeoutilpilotage01.marc.fr.ssg/"
+                "Vous avez 48h pour vous défendre, rendez vous sur http://renseignerAuDeploiement/"
 
             send_mail(
                 '[ Buchette Factory ] Nouvelle Buchette',
                 l_string_email,
-                'IntegrationEdf@soprasteria.com',
+                'Deploiement@soprasteria.com',
                 [l_buchette.victime.email],
                 fail_silently=True,
                 )

@@ -10,6 +10,26 @@ Buchettes Factory
 		Bienvenue à la bonne buchette {% if user.is_authenticated %} {{ user.username }} {% endif %} !
 	</h2>
 
+	{% if user.is_authenticated %}
+	<p style="margin-top:30px"></p>
+	<div class="row">
+		<div class="col-md-6">
+			<p>
+				<a class="btn btn-primary"
+					href="{% url 'new_buchette' %}"> Mettre une buchette !</a>
+			</p>
+		</div>
+		<div class="col-md-6">
+			<p>
+				<a class="btn btn-primary"
+					href="{% url 'buchette_payees' %}"
+				   {% if nombre_buchette_utilisateur_courant < 3 %} disabled="disabled" {% endif %}
+					> J'ai payé mes buchettes</a>
+			</p>
+		</div>
+	</div>
+	{% endif %}
+
 	<div class="row">
 		<p style="margin-top:50px"></p>
 		<h3>Tableau des buchettes</h3>
@@ -73,23 +93,6 @@ Buchettes Factory
 	</div>
 
 	{% if user.is_authenticated %}
-		<p style="margin-top:30px"></p>
-		<div class="row">
-			<div class="col-md-6">
-				<p>
-					<a class="btn btn-primary"
-						href="{% url 'new_buchette' %}"> Mettre une buchette !</a>
-				</p>
-			</div>
-			<div class="col-md-6">
-				<p>
-					<a class="btn btn-primary"
-						href="{% url 'buchette_payees' %}"
-					   {% if nombre_buchette_utilisateur_courant < 3 %} disabled="disabled" {% endif %}
-						> J'ai payé mes buchettes</a>
-				</p>
-			</div>
-		</div>
 		{% if dico_user_buchettes_payees_a_confirmer.items %}
 
 			<p style="margin-top:50px"></p>
