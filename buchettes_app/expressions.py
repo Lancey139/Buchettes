@@ -79,4 +79,8 @@ s_ListeExpressions = [
     "Toucher du bois",
     "Tourner autour du pot",
     "Un tiens vaut mieux que deux tu l’auras",
+    "Vendre son âme au Lionel",
+    "Faire un pacte avec le Baptiste",
+    "Ronger la canne",
+    "Ca sent le chasuble"
 ]
