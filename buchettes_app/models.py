@@ -81,6 +81,12 @@ class Buchette(models.Model):
 
     nom_membre_comite = models.TextField(default="")
 
+    vote_pour = models.IntegerField(default=0)
+
+    vote_contre = models.IntegerField(default=0)
+
+    comite_a_voter = models.ManyToManyField(User)
+
     # On déclare le manager associé
     objects = BuchetteQuerySet.as_manager()
 

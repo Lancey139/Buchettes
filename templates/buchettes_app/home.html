@@ -175,7 +175,7 @@ Buchettes Factory
 
 		{% if is_comite_buchette == True %}
 			<div class="row">
-				<h3>Buchettes à valider par le comité</h3>
+				<h3>Buchettes en attente de votre vote</h3>
 
 				{% if list_buchette_a_valider %}
 					<table class="table table-bodered tictactoe-table">
@@ -184,6 +184,8 @@ Buchettes Factory
 							<td class="tictactoe-cell">Message associé </td>
 							<td class="tictactoe-cell">Message de la défense </td>
 							<td class="tictactoe-cell"> Date buchette </td>
+							<td class="tictactoe-cell"> Vote pour </td>
+							<td class="tictactoe-cell"> Vote contre </td>
 							<td class="tictactoe-cell"></td>
 							<td class="tictactoe-cell"></td>
 						</tr>
@@ -193,20 +195,46 @@ Buchettes Factory
 							<td class="tictactoe-cell"> {{ buchette.message_buchette }} </td>
 							<td class="tictactoe-cell"> {{ buchette.message_defense }} </td>
 							<td class="tictactoe-cell"> {{ buchette.date_buchette }} </td>
+							<td class="tictactoe-cell"> {{ buchette.vote_pour }} </td>
+							<td class="tictactoe-cell"> {{ buchette.vote_contre }} </td>
 							<td><a class="btn btn-primary"
-								   href="{% url 'accept_buchette' id=buchette.id %}"
-								   > Valider </a> </td>
+								href="{% url 'accept_buchette' id=buchette.id %}"
+								> Valider </a> 
+								</td>
 							<td><a class="btn btn-primary"
 								   href="{% url 'deny_buchette' id=buchette.id %}"
 									> Refuser </a> </td>
 						</tr>
 						{% endfor %}
 						</table>
-					</div>
-				{% else %}
-					<p>Il n'y a a pas de buchettes en attente de validation.</p>
-				{% endif %}
-
+					{% else %}
+						<p>Il n'y a a pas de buchettes en attente de validation.</p>
+					{% endif %}
+			</div>
+			<div class="row">
+				<h3>Buchettes en attente du vote des autres membres du comité</h3>
+					{% if list_buchette_attente %}
+					<table class="table table-bodered tictactoe-table">
+						<tr>
+							<td class="tictactoe-cell">Victime </td>
+							<td class="tictactoe-cell">Message associé </td>
+							<td class="tictactoe-cell">Message de la défense </td>
+							<td class="tictactoe-cell"> Date buchette </td>
+							<td class="tictactoe-cell"> Vote pour </td>
+							<td class="tictactoe-cell"> Vote contre </td>
+						</tr>
+						{% for buchette in list_buchette_attente %}
+						<tr>
+							<td class="tictactoe-cell"> {{ buchette.victime }} </td>
+							<td class="tictactoe-cell"> {{ buchette.message_buchette }} </td>
+							<td class="tictactoe-cell"> {{ buchette.message_defense }} </td>
+							<td class="tictactoe-cell"> {{ buchette.date_buchette }} </td>
+							<td class="tictactoe-cell"> {{ buchette.vote_pour }} </td>
+							<td class="tictactoe-cell"> {{ buchette.vote_contre }} </td>
+						</tr>
+						{% endfor %}
+						</table>
+					{% endif %}
 			</div>
 		{% endif %}
 

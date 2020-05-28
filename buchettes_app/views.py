@@ -19,6 +19,7 @@ def home(request):
     l_dictionnaire_user_buchette_A = {}
     # Si c'est un membre du comité, liste a valider / refuser
     l_liste_buchette_a_valider = []
+    l_liste_buchette_attente = []
     #Identifie si on a un membre du comite
     l_comite_user = False
     # Nombre de buchette qu'a l'utilisateur courant
@@ -85,12 +86,19 @@ def home(request):
                 l_dict_user_buchette_payee_confirmation[l_user] = \
                     l_buchette_payee_confirmation.buchettes_for_user(l_user)
         # Code en charge de determiner si l'utilisateur courant fait parti du comite des buchettes
-        l_comite_user = True if len(request.user.get_group_permissions()) > 27 else False
+        l_comite_user = True if len(request.user.groups.filter(name='Comite')) == 1 else False
 
         # Liste des buchettes a valider par le comite si le user en est membre
         if l_comite_user:
-            l_liste_buchette_a_valider = Buchette.objects.buchettes_a_valider()
-
+            l_liste_buchette_comite = Buchette.objects.buchettes_a_valider()
+            l_liste_buchette_a_valider = []
+            l_liste_buchette_attente = []
+            # Pour chaque buchette dans le comité on regarde si le user a voté
+            for l_buchette in l_liste_buchette_comite:
+                if len(l_buchette.comite_a_voter.filter(username=request.user.username)) == 0:
+                    l_liste_buchette_a_valider.append(l_buchette)
+                else:
+                    l_liste_buchette_attente.append(l_buchette)
 
     return render(request, 'buchettes_app/home.html',
                   {
@@ -99,6 +107,7 @@ def home(request):
                       'dictionnaire_user_buchette_A': l_dictionnaire_user_buchette_A,
                       'is_comite_buchette': l_comite_user,
                       'list_buchette_a_valider': l_liste_buchette_a_valider,
+                      'list_buchette_attente': l_liste_buchette_attente,
                       'nombre_buchette_utilisateur_courant' : l_buchette_current_user,
                       'dico_user_buchettes_payees_a_confirmer' : l_dict_user_buchette_payee_confirmation,
                       'liste_user_a_defendre': l_liste_user_a_defendre,
@@ -144,7 +153,7 @@ def new_buchette(request):
 def accept_buchette(request, id):
 
     # On revérifie que l'utilisateur est membre du comité
-    l_comite_user = True if len(request.user.get_group_permissions()) > 27 else False
+    l_comite_user = True if len(request.user.groups.filter(name='Comite')) == 1 else False
 
     l_utilisateur_autorise = False
     l_message_erreur = ""
@@ -154,9 +163,15 @@ def accept_buchette(request, id):
         buchette_a_valider = get_object_or_404(Buchette, pk=id)
 
         l_utilisateur_autorise = True
-        buchette_a_valider.status_buchette = 'A'
-        buchette_a_valider.nom_membre_comite = request.user.username
+        buchette_a_valider.vote_pour += 1
+        buchette_a_valider.comite_a_voter.add(request.user)
+        if buchette_a_valider.nom_membre_comite == "":
+            buchette_a_valider.nom_membre_comite += request.user.username
+        else:
+            buchette_a_valider.nom_membre_comite += ", " + request.user.username
         buchette_a_valider.save()
+        vote_comite(buchette_a_valider)
+
     else:
         l_utilisateur_autorise = False
         l_message_erreur = 'Il faut être menmbre du comité pour valider une buchette'
@@ -190,7 +205,7 @@ def buchette_payees(request):
 @login_required
 def deny_buchette(request, id):
     # On revérifie que l'utilisateur est membre du comité
-    l_comite_user = True if len(request.user.get_group_permissions()) > 27 else False
+    l_comite_user = True if len(request.user.groups.filter(name='Comite')) == 1 else False
 
     l_utilisateur_autorise = False
     l_message_erreur = ""
@@ -199,14 +214,12 @@ def deny_buchette(request, id):
         # Méthode en charge d'accepter une buchette.
         buchette_a_valider = get_object_or_404(Buchette, pk=id)
 
-        # On verifie que la bucette ne soit pas attribuée au membre en train de faire la vérification
-        if buchette_a_valider.victime == request.user:
-            l_message_erreur = 'Impossible de refuser sa propre buchette'
-            l_utilisateur_autorise = False
-        else:
-            l_utilisateur_autorise = True
-            buchette_a_valider.status_buchette = 'R'
-            buchette_a_valider.save()
+        buchette_a_valider.vote_contre += 1
+        buchette_a_valider.comite_a_voter.add(request.user)
+        buchette_a_valider.save()
+        vote_comite(buchette_a_valider)
+        l_utilisateur_autorise = True
+
     else:
         l_utilisateur_autorise = False
         l_message_erreur = 'Il faut être menmbre du comité pour refuser une buchette'
@@ -355,4 +368,14 @@ def liste_buchettes(request, user_id):
                   })
 
 
-
+def vote_comite(buchette):
+        # On vient vérifier que tous les membres du comité ont votés
+        if (buchette.vote_pour +  buchette.vote_contre) >= len(User.objects.filter(groups__name='Comite')):
+            # On vérifie si il y eu plus de vote pour
+            if(buchette.vote_pour >= buchette.vote_contre):
+                # Si c'est la cas on valide la buchette, sinon on la rejette
+                buchette.status_buchette = 'A'
+                buchette.save()
+            else:
+                buchette.status_buchette = 'R'
+                buchette.save()
