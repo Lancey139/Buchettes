@@ -57,11 +57,17 @@ class BuchetteQuerySet(models.QuerySet):
             l_current_date = dt.datetime.now()
             timezone = pytz.timezone("Europe/Paris")
             l_current_date_with_utc = timezone.localize(l_current_date)
-            l_buche.temps_restant = dt.timedelta(days=2) - (l_current_date_with_utc - l_buche.date_buchette)
-            if l_buche.temps_restant < dt.timedelta(seconds=0):
-                l_buche.status_buchette = 'E'
-                l_buche.message_defense = "Il est trop tard pour se défendre"
-            l_buche.save()
+
+            # On vérifie que l'on est pas en week end !
+            if(l_current_date_with_utc.weekday() != 5 and
+                    l_current_date_with_utc.weekday() != 6):
+                    l_buche.temps_restant = dt.timedelta(days=2) - (l_current_date_with_utc - l_buche.date_buchette)
+                    if l_buche.temps_restant < dt.timedelta(seconds=0):
+                        l_buche.status_buchette = 'E'
+                        l_buche.message_defense = "Il est trop tard pour se défendre"
+                    l_buche.save()
+
+
 
 
 
@@ -89,4 +95,10 @@ class Buchette(models.Model):
 
     # On déclare le manager associé
     objects = BuchetteQuerySet.as_manager()
+
+    def get_temps_restant(self):
+        l_str_temps = str(self.temps_restant)
+        l_str_temps = l_str_temps.replace('day', 'jour')
+        l_str_temps_array = l_str_temps.split(".")
+        return l_str_temps_array[0]
 

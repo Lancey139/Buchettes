@@ -303,6 +303,8 @@ def singup_view(request):
 def defence(request, id):
     # Méthode en charge d'e generer le form pour la défence d'une buchette.
     buchette_a_defendre = get_object_or_404(Buchette, pk=id)
+    #On stocke le message de la buchette
+    message_buchette = buchette_a_defendre.message_buchette
 
     # On verifie que l'utilisateru courant est bien celui touché par la buchette
     if buchette_a_defendre.victime != request.user:
@@ -321,6 +323,19 @@ def defence(request, id):
         if form.is_valid():
             #  On enregistre en data base
             buchette_a_defendre.status_buchette = 'E'
+            #Vérification que l'utilisateur n'a pas modifié le champs message en passant par le HTML
+            # Si c'est le cas, buchette auto !
+            if(buchette_a_defendre.message_buchette != buchette_a_defendre):
+                buchette_a_defendre.message_buchette = message_buchette
+                # L'utilisateur est sanctionné d'une buchette
+                new_buchette = Buchette(status_buchette='A')
+                new_buchette.victime = request.user
+                new_buchette.message_buchette = "Buchette Factory : Cet utilisateur a tenté de tricher en modifiant" \
+                                                " le message de sa buchette lors de l'écriture de la défense ! Une " \
+                                                "buchette lui a été attribué automatiquement !"
+                new_buchette.message_defense = "Pas de défense possible pour les tricheurs !"
+                new_buchette.save()
+
             form.save()
             return redirect("player_home")
     else:
