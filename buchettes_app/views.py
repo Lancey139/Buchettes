@@ -304,7 +304,7 @@ def defence(request, id):
     # Méthode en charge d'e generer le form pour la défence d'une buchette.
     buchette_a_defendre = get_object_or_404(Buchette, pk=id)
     #On stocke le message de la buchette
-    message_buchette = buchette_a_defendre.message_buchette
+    message_buchette_avant_form = buchette_a_defendre.message_buchette
 
     # On verifie que l'utilisateru courant est bien celui touché par la buchette
     if buchette_a_defendre.victime != request.user:
@@ -325,8 +325,8 @@ def defence(request, id):
             buchette_a_defendre.status_buchette = 'E'
             #Vérification que l'utilisateur n'a pas modifié le champs message en passant par le HTML
             # Si c'est le cas, buchette auto !
-            if(buchette_a_defendre.message_buchette != buchette_a_defendre):
-                buchette_a_defendre.message_buchette = message_buchette
+            if(buchette_a_defendre.message_buchette != message_buchette_avant_form):
+                buchette_a_defendre.message_buchette = message_buchette_avant_form
                 # L'utilisateur est sanctionné d'une buchette
                 new_buchette = Buchette(status_buchette='A')
                 new_buchette.victime = request.user
