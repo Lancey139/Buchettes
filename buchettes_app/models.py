@@ -61,7 +61,7 @@ class BuchetteQuerySet(models.QuerySet):
             # On vérifie que l'on est pas en week end !
             if(l_current_date_with_utc.weekday() != 5 and
                     l_current_date_with_utc.weekday() != 6):
-                    l_buche.temps_restant = dt.timedelta(days=2) - (l_current_date_with_utc - l_buche.date_buchette)
+                    l_buche.temps_restant = dt.timedelta(days=7) - (l_current_date_with_utc - l_buche.date_buchette)
                     if l_buche.temps_restant < dt.timedelta(seconds=0):
                         l_buche.status_buchette = 'E'
                         l_buche.message_defense = "Il est trop tard pour se défendre"
